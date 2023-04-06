@@ -11,7 +11,7 @@ class Engine:
         self,
         power_phasor: PowerPhasor,
         phase_num: int,
-        efficiency: float=1.0
+        efficiency: float=None
     ) -> None:
         assert isinstance(efficiency, (int, float)) and 0 <= efficiency <= 1, 'A eficiência deve ser um número de 0 a 1.'
 
