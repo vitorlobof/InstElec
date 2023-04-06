@@ -18,27 +18,27 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 # Paths to tables.
 AMPERAGE_TABLE = {
     'cupper': {
-        'PVC': os.path.join(STATIC_DIR, 'cobre_pvc.csv'),
-        'EPR': os.path.join(STATIC_DIR, 'cobre_epr_ou_xlpe.csv'),
-        'XLPE': os.path.join(STATIC_DIR, 'cobre_epr_ou_xlpe.csv')
+        'PVC': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'cobre_pvc.csv'),
+        'EPR': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'cobre_epr_ou_xlpe.csv'),
+        'XLPE': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'cobre_epr_ou_xlpe.csv')
     },
     'aluminum': {
         'PVC': os.path.join(
-            STATIC_DIR, 'aluminio_pvc.csv'),
+            STATIC_DIR, 'condutor_dimensioning', 'aluminio_pvc.csv'),
         'EPR': os.path.join(
-            STATIC_DIR, 'aluminio_epr_ou_xlpe.csv'),
+            STATIC_DIR, 'condutor_dimensioning', 'aluminio_epr_ou_xlpe.csv'),
         'XLPE': os.path.join(
-            STATIC_DIR, 'aluminio_epr_ou_xlpe.csv')
+            STATIC_DIR, 'condutor_dimensioning', 'aluminio_epr_ou_xlpe.csv')
     }
 }
 
-TENSION_FALL_TABLE = os.path.join(STATIC_DIR, 'tension_fall.csv')
+TENSION_FALL_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'tension_fall.csv')
 
 TEMPERATURE_TABLE = {
     'ambiente': os.path.join(
-        STATIC_DIR, 'temperature_correction_ambient.csv'),
+        STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ambient.csv'),
     'solo': os.path.join(
-        STATIC_DIR, 'temperature_correction_ground.csv')
+        STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ground.csv')
 }
 
-GROUPING_TABLE = os.path.join(STATIC_DIR, 'agrupamento.csv')
+GROUPING_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'agrupamento.csv')
