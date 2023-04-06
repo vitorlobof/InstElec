@@ -91,7 +91,7 @@ class PowerPhasor(complex):
         """
         return self.real/abs(self)
     
-    def indutive_power_factor_to(self, power_factor: float) -> float:
+    def indutive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
         """
         Calculates and returns the power the capacitive bank
         requires to correct the power factor to the given
@@ -103,9 +103,9 @@ class PowerPhasor(complex):
             'The power_factor_indutive has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor_indutive**2 - 1)
-        return (self.reactive() - self.active()*tan)*ureg.Unit('kVAr')
+        return (self.reactive() - self.active()*tan)*ureg.Unit('kvar')
     
-    def capacitive_power_factor_to(self, power_factor: float) -> float:
+    def capacitive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
         """
         Calculates and returns the power the capacitive bank
         requires to correct the power factor to the given
@@ -117,4 +117,4 @@ class PowerPhasor(complex):
             'The power_factor_capacitive has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor_capacitive**2 - 1)
-        return (self.reactive() + self.active()*tan)*ureg.Unit('kVAr')
+        return (self.reactive() + self.active()*tan)*ureg.Unit('kvar')
