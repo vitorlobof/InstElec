@@ -16,11 +16,11 @@ class PowerPhasor(complex):
         power = power.to_base_units()
 
         if power.units == ureg.Unit('VA'):
-            x, y = power.to('kVA').magnitude*cos, power.magnitude*sin
+            x, y = power.to('kVA').magnitude*cos, power.to('kVA').magnitude*sin
         elif power.units == ureg.Unit('W'):
-            x, y = power.to('kW').magnitude, power.magnitude*(sin/cos)
+            x, y = power.to('kW').magnitude, power.to('kW').magnitude*(sin/cos)
         elif power.units == ureg.Unit('var'):
-            x, y = power.to('kvar').magnitude*(cos/sin), power.magnitude
+            x, y = power.to('kvar').magnitude*(cos/sin), power.to('kvar').magnitude
         else:
             raise ValueError('A potência só pode apresentar as unidades VA, W ou var.')
 
