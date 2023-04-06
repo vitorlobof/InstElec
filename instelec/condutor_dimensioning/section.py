@@ -18,7 +18,7 @@ class CondutorSection:
         self.power_factor = power_factor
         self.phase_num = phase_num
 
-        self.ampacity = Ampacity(material, insulator)
+        self.ampacity = Amperage(material, insulator)
         self.tension_fall = TensionFall()
     
     def by_amperage(

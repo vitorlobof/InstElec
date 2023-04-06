@@ -13,16 +13,14 @@ class PowerPhasor(complex):
         cos = power_factor
         sin = np.sqrt(1 - power_factor**2)
 
-        power = power.to_base_units()
-
-        if power.units == ureg.Unit('VA'):
-            x, y = power.to('kVA').magnitude*cos, power.to('kVA').magnitude*sin
-        elif power.units == ureg.Unit('W'):
-            x, y = power.to('kW').magnitude, power.to('kW').magnitude*(sin/cos)
-        elif power.units == ureg.Unit('var'):
-            x, y = power.to('kvar').magnitude*(cos/sin), power.to('kvar').magnitude
+        if power.units == ureg.Unit('kVA'):
+            x, y = power.magnitude*cos, power.magnitude*sin
+        elif power.units == ureg.Unit('kW'):
+            x, y = power.magnitude, power.magnitude*(sin/cos)
+        elif power.units == ureg.Unit('kvar'):
+            x, y = power.magnitude*(cos/sin), power.magnitude
         else:
-            raise ValueError('A potência só pode apresentar as unidades VA, W ou var.')
+            raise ValueError('A potência só pode apresentar as unidades kVA, kW ou kvar.')
 
         return super(PowerPhasor, cls).__new__(cls, x, y)
     
@@ -82,7 +80,7 @@ class PowerPhasor(complex):
         """
         Returns the reactive power.
         """
-        return self.imag*ureg.Unit('kVAr')
+        return self.imag*ureg.Unit('kvar')
 
     def power_factor(self) -> float:
         """
