@@ -18,7 +18,7 @@ class CondutorSection:
         self.power_factor = power_factor
         self.phase_num = phase_num
 
-        self.ampacity = Amperage(material, insulator)
+        self.amperage = Amperage(material, insulator)
         self.tension_fall = TensionFall()
     
     def by_amperage(
@@ -28,7 +28,7 @@ class CondutorSection:
     
     def nominal_current(
             self, section: ureg.Quantity) -> ureg.Quantity:
-        return self.ampacity.get_nominal_current(
+        return self.amperage.get_nominal_current(
             section, self.method, self.phase_num)
     
     def by_tension_fall_simple(
