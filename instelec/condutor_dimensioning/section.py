@@ -4,6 +4,8 @@ from .tables import Amperage, TensionFall, NotInTableError
 
 class CondutorSection:
     material: str = None
+    electrical_conductivity: ureg.Quantity = None
+    
     insulator: str = None
 
     continuous_service_max_temperature = None
@@ -36,25 +38,26 @@ class CondutorSection:
         return self.amperage.get_nominal_current(
             section, self.method, self.phase_num)
     
-    def by_tension_fall_simple(
+    def by_voltage_drop_simple(
         self,
         current: ureg.Quantity,
         distance: ureg.Quantity,
         max_fall: float
     ) -> ureg.Quantity:
-        vff = VOLTAGE_FF.to(ureg.volt).magnitude
-        vfn = VOLTAGE_FN.to(ureg.volt).magnitude
-        d = distance.to(ureg.meter).magnitude
-        i = current.to(ureg.ampere).magnitude
+        vff = VOLTAGE_FF
+        vfn = VOLTAGE_FN
+        L = distance
+        I = current
+        p = self.electrical_conductivity
 
         if self.phase_num == 1:
-            section = (2*(1/56)*(d*i))/(max_fall*vfn)
+            section = (2*p*L*I)/(max_fall*vfn)
         elif self.phase_num == 3:
-            section = (np.sqrt(3)*(1/56)*(d*i))/(max_fall*vff)
+            section = (np.sqrt(3)*p*L*I)/(max_fall*vff)
         
-        return section * ureg.millimeter**2
+        return section.to(ureg.millimeter**2)
     
-    def by_tension_fall(
+    def by_voltage_drop(
         self,
         current: ureg.Quantity,
         distance: ureg.Quantity,
@@ -64,7 +67,7 @@ class CondutorSection:
         vfn = VOLTAGE_FN
 
         if self.by_ampacity(current) <= 25*ureg.millimeter**2:
-            result = self.by_tension_fall_simple(
+            result = self.by_voltage_drop_simple(
                 current, distance, max_fall)
             
             for section in self.ampacity.table.index:
@@ -93,8 +96,8 @@ class CondutorSection:
         simmetric_short_circuit_current: ureg.Quantity,
         fault_elimination_time: ureg.Quantity
     ) -> ureg.Quantity:
-        min_temp = self.continuous_service_max_temperature
-        max_temp = self.sc_limit_temperature
+        min_temp = self.continuous_service_max_temperature.magnitude
+        max_temp = self.sc_limit_temperature.magnitude
 
         result = 1/0.34 * ureg.millimeter**2/(ureg.kiloampere * ureg.second**(1/2))
         result *= np.sqrt(fault_elimination_time)
@@ -125,6 +128,7 @@ class CondutorSection:
 
 class Cupper(CondutorSection):
     material = 'cupper'
+    electrical_conductivity = 1/56*10**(-6)*(ureg.ohm*ureg.meter)
 
     def min_section(self, adm=False) -> ureg.Quantity:
         if adm:
@@ -135,9 +139,9 @@ class Cupper(CondutorSection):
 class CupperPVC(Cupper):
     insulator = 'PVC'
 
-    continuous_service_max_temperature = 70
-    overcharge_limit_temperature = 100
-    sc_limit_temperature = 160
+    continuous_service_max_temperature = 70*ureg.Unit('celsius')
+    overcharge_limit_temperature = 100*ureg.Unit('celsius')
+    sc_limit_temperature = 160*ureg.Unit('celsius')
     
     def by_short_circuit(
         self,
@@ -154,13 +158,13 @@ class CupperPVC(Cupper):
 class CupperEPR(Cupper):
     insulator = 'EPR'
 
-    continuous_service_max_temperature = 90
-    overcharge_limit_temperature = 130
-    sc_limit_temperature = 250
+    continuous_service_max_temperature = 90*ureg.Unit('celsius')
+    overcharge_limit_temperature = 130*ureg.Unit('celsius')
+    sc_limit_temperature = 250*ureg.Unit('celsius')
 
 class CupperXLPE(Cupper):
     insulator = 'XLPE'
 
-    continuous_service_max_temperature = 90
-    overcharge_limit_temperature = 130
-    sc_limit_temperature = 250
+    continuous_service_max_temperature = 90*ureg.Unit('celsius')
+    overcharge_limit_temperature = 130*ureg.Unit('celsius')
+    sc_limit_temperature = 250*ureg.Unit('celsius')
