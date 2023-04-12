@@ -48,7 +48,7 @@ class CondutorSection:
         vfn = VOLTAGE_FN
         L = distance
         I = current
-        p = self.electrical_conductivity
+        p = self.electrical_resistivity
 
         if self.phase_num == 1:
             section = (2*p*L*I)/(max_fall*vfn)
@@ -126,33 +126,58 @@ class CondutorSection:
         
         raise NotInTableError('Não corresponde a nenhuma seção tabelada.')
 
-class Cupper(CondutorSection):
+class Cupper:
     material = 'cupper'
-    electrical_conductivity = 1/56*10**(-6)*(ureg.ohm*ureg.meter)
+    electrical_resistivity = 1/56*10**(-6)*(ureg.ohm*ureg.meter)
 
-    def min_section(self, adm=False) -> ureg.Quantity:
-        if adm:
+    def min_section(self, lights=False) -> ureg.Quantity:
+        if lights:
             return 1.5 * ureg.millimeter**2
         else:
             return 2.5 * ureg.millimeter**2
 
-class CupperPVC(Cupper):
+class Aluminum:
+    material = 'aluminum'
+    electrical_resistivity = 2.82*10**(-8)*(ureg.ohm*ureg.meter)
+
+    def min_section(self, lights=False) -> ureg.Quantity:
+        return 16 * ureg.millimeter**2
+
+class PVC:
     insulator = 'PVC'
 
-    continuous_service_max_temperature = 70*ureg.Unit('celsius')
-    overcharge_limit_temperature = 100*ureg.Unit('celsius')
-    sc_limit_temperature = 160*ureg.Unit('celsius')
+    continuous_service_max_temperature = ureg.Quantity(70, 'celsius')
+    overcharge_limit_temperature = ureg.Quantity(100, 'celsius')
+    sc_limit_temperature = ureg.Quantity(160, 'celsius')
 
-class CupperEPR(Cupper):
+class EPR:
     insulator = 'EPR'
 
-    continuous_service_max_temperature = 90*ureg.Unit('celsius')
-    overcharge_limit_temperature = 130*ureg.Unit('celsius')
-    sc_limit_temperature = 250*ureg.Unit('celsius')
+    continuous_service_max_temperature = ureg.Quantity(90, 'celsius')
+    overcharge_limit_temperature = ureg.Quantity(130, 'celsius')
+    sc_limit_temperature = ureg.Quantity(250, 'celsius')
 
-class CupperXLPE(Cupper):
+class XLPE:
     insulator = 'XLPE'
 
-    continuous_service_max_temperature = 90*ureg.Unit('celsius')
-    overcharge_limit_temperature = 130*ureg.Unit('celsius')
-    sc_limit_temperature = 250*ureg.Unit('celsius')
+    continuous_service_max_temperature = ureg.Quantity(90, 'celsius')
+    overcharge_limit_temperature = ureg.Quantity(130, 'celsius')
+    sc_limit_temperature = ureg.Quantity(250, 'celsius')
+
+class CupperPVC(Cupper, PVC, CondutorSection):
+    pass
+
+class CupperEPR(Cupper, EPR, CondutorSection):
+    pass
+
+class CupperXLPE(Cupper, XLPE, CondutorSection):
+    pass
+
+class AluminumPVC(Aluminum, PVC, CondutorSection):
+    pass
+
+class AluminumEPR(Aluminum, EPR, CondutorSection):
+    pass
+
+class AluminumXLPE(Aluminum, XLPE, CondutorSection):
+    pass
