@@ -142,18 +142,6 @@ class CupperPVC(Cupper):
     continuous_service_max_temperature = 70*ureg.Unit('celsius')
     overcharge_limit_temperature = 100*ureg.Unit('celsius')
     sc_limit_temperature = 160*ureg.Unit('celsius')
-    
-    def by_short_circuit(
-        self,
-        simmetric_short_circuit_current: ureg.Quantity,
-        fault_elimination_time: ureg.Quantity,
-    ) -> ureg.Quantity:
-        return super().by_short_circuit(
-            simmetric_short_circuit_current,
-            fault_elimination_time,
-            70,
-            160
-        )
 
 class CupperEPR(Cupper):
     insulator = 'EPR'
