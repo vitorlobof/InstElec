@@ -3,10 +3,15 @@ import numpy as np
 from .tables import Amperage, TensionFall, NotInTableError
 
 class CondutorSection:
+    material: str = None
+    insulator: str = None
+
+    continuous_service_max_temperature = None
+    overcharge_limit_temperature = None
+    sc_limit_temperature = None
+
     def __init__(
         self,
-        material: str,
-        insulator: str,
         instalation_method: str,
         power_factor: float,
         phase_num: int
@@ -18,7 +23,7 @@ class CondutorSection:
         self.power_factor = power_factor
         self.phase_num = phase_num
 
-        self.amperage = Amperage(material, insulator)
+        self.amperage = Amperage(self.material, self.insulator)
         self.tension_fall = TensionFall()
     
     def by_amperage(
@@ -86,14 +91,15 @@ class CondutorSection:
     def by_short_circuit(
         self,
         simmetric_short_circuit_current: ureg.Quantity,
-        fault_elimination_time: ureg.Quantity,
-        min_temperature: float,
-        max_temperature: float
+        fault_elimination_time: ureg.Quantity
     ) -> ureg.Quantity:
+        min_temp = self.continuous_service_max_temperature
+        max_temp = self.sc_limit_temperature
+
         result = 1/0.34 * ureg.millimeter**2/(ureg.kiloampere * ureg.second**(1/2))
         result *= np.sqrt(fault_elimination_time)
         result *= simmetric_short_circuit_current
-        result /= np.sqrt(np.log10((234 + max_temperature)/(234 + min_temperature)))
+        result /= np.sqrt(np.log10((234 + max_temp)/(234 + min_temp)))
 
         result = result.to(ureg.millimeter**2)
 
@@ -117,20 +123,21 @@ class CondutorSection:
         
         raise NotInTableError('Não corresponde a nenhuma seção tabelada.')
 
-class CupperPVC(CondutorSection):
-    def __init__(
-        self,
-        instalation_method: str,
-        power_factor: float,
-        phase_num: int
-    ) -> None:
-        super().__init__(
-            'cupper',
-            'PVC',
-            instalation_method,
-            power_factor,
-            phase_num
-        )
+class Cupper(CondutorSection):
+    material = 'cupper'
+
+    def min_section(self, adm=False) -> ureg.Quantity:
+        if adm:
+            return 1.5 * ureg.millimeter**2
+        else:
+            return 2.5 * ureg.millimeter**2
+
+class CupperPVC(Cupper):
+    insulator = 'PVC'
+
+    continuous_service_max_temperature = 70
+    overcharge_limit_temperature = 100
+    sc_limit_temperature = 160
     
     def by_short_circuit(
         self,
@@ -144,32 +151,16 @@ class CupperPVC(CondutorSection):
             160
         )
 
-class CupperEPR(CondutorSection):
-    def __init__(
-        self,
-        instalation_method: str,
-        power_factor: float,
-        phase_num: int
-    ) -> None:
-        super().__init__(
-            'cupper',
-            'EPR',
-            instalation_method,
-            power_factor,
-            phase_num
-        )
-    
-    def by_short_circuit(
-        self,
-        simmetric_short_circuit_current: ureg.Quantity,
-        fault_elimination_time: ureg.Quantity,
-    ) -> ureg.Quantity:
-        return super().by_short_circuit(
-            simmetric_short_circuit_current,
-            fault_elimination_time,
-            90,
-            250
-        )
+class CupperEPR(Cupper):
+    insulator = 'EPR'
 
-class CupperXLPE(CupperEPR):
-    pass
+    continuous_service_max_temperature = 90
+    overcharge_limit_temperature = 130
+    sc_limit_temperature = 250
+
+class CupperXLPE(Cupper):
+    insulator = 'XLPE'
+
+    continuous_service_max_temperature = 90
+    overcharge_limit_temperature = 130
+    sc_limit_temperature = 250
