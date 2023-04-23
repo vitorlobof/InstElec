@@ -15,6 +15,7 @@ class TemperatureCorrection:
     
     def correction_factor(
             self, temperature: ureg.Quantity) -> float:
+        temperature = temperature.to('celsius').magnitude
         series = self.table[self.insulator]
         for value, factor in series.items():
             if value >= temperature:
