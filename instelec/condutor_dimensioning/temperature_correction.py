@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from ..settings import TEMPERATURE_TABLE
+from ..settings import TEMPERATURE_TABLE, ureg
 
 class TemperatureCorrection:
     place = None

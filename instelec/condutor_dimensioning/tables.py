@@ -74,7 +74,7 @@ class Amperage:
 
 class VoltageDrop:
     def __init__(self) -> None:
-        filepath = TENSION_FALL_TABLE
+        filepath = VOLTAGE_DROP_TABLE
         self.table = (
             pd.read_csv(filepath, index_col='section')
             .astype('float16')
