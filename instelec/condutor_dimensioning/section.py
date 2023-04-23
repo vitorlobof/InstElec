@@ -89,7 +89,7 @@ class CondutorSection:
                 if result.magnitude <= section:
                     return section * ureg.millimeter**2
         else:
-            for idx, row in self.tension_fall.table.iterrows():
+            for idx, row in self.voltage_drop.table.iterrows():
                 cos = self.power_factor
                 sin = np.sqrt(1 - cos**2)
 
