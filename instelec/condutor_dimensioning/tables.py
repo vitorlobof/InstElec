@@ -2,9 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 from ..settings import (
-    ureg, AMPERAGE_TABLE, TENSION_FALL_TABLE,
-    TEMPERATURE_TABLE, GROUPING_TABLE
-)
+    ureg, AMPERAGE_TABLE, TENSION_FALL_TABLE, GROUPING_TABLE)
 
 class NotInTableError(Exception):
     pass
@@ -83,37 +81,14 @@ class TensionFall:
             .astype('float16')
         )
 
-class Temperature:
-    def __init__(self,
-        temperature: ureg.Quantity,
-        place: str
-    ) -> None:
-        filepath = TEMPERATURE_TABLE[place]
-        self.table = (
-            pd.read_csv(filepath, index_col='temperatura')
-            .astype('float16')
-        )
-    
-    def correction_factor(self) -> float:
-        temperature = self.temperature.to(ureg.celsius).magnitude
-        series = self.temp_table[self.isolation]
-        for value, factor in series.items():
-            if value >= temperatura:
-                if factor == np.nan:
-                    break
-                return round(factor, 2)
-
-        raise NotInTableError(
-            'O isolante utilizado não suporta essa temperatura.')
-
 class Grouping:
-    def __init__(self, num_circuits: int, method: str) -> None:
+    def __init__(self, method: str, num_circuits: int) -> None:
         filepath = GROUPING_TABLE
         self.table = pd.read_csv(filepath)
         self.table.index += 1
         
-        self.num_circuits = num_circuits
         self.method = method
+        self.num_circuits = num_circuits
     
     def correction_factor(self) -> float:
         return self.table.loc[self.num_circuits, self.method]

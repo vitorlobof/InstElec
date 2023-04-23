@@ -93,26 +93,26 @@ class PowerPhasor(complex):
         """
         Calculates and returns the power the capacitive bank
         requires to correct the power factor to the given
-        power_factor_indutive.
+        power_factor.
         """
-        assert isinstance(power_factor_indutive, (int, float)),\
-            'The power_factor_indutive has to be a number from 0 to 1.'
-        assert 0 <= power_factor_indutive <= 1,\
-            'The power_factor_indutive has to be a number from 0 to 1.'
+        assert isinstance(power_factor, (int, float)),\
+            'The power_factor has to be a number from 0 to 1.'
+        assert 0 <= power_factor <= 1,\
+            'The power_factor has to be a number from 0 to 1.'
 
-        tan = np.sqrt(1/power_factor_indutive**2 - 1)
-        return (self.reactive() - self.active()*tan)*ureg.Unit('kvar')
+        tan = np.sqrt(1/power_factor**2 - 1)
+        return (self.reactive() - self.active()*tan).to(ureg.Unit('kvar'))
     
     def capacitive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
         """
         Calculates and returns the power the capacitive bank
         requires to correct the power factor to the given
-        power_factor_capacitive.
+        power_factor.
         """
-        assert isinstance(power_factor_capacitive, (int, float)),\
-            'The power_factor_capacitive has to be a number from 0 to 1.'
-        assert 0 <= power_factor_capacitive <= 1,\
-            'The power_factor_capacitive has to be a number from 0 to 1.'
+        assert isinstance(power_factor, (int, float)),\
+            'The power_factor has to be a number from 0 to 1.'
+        assert 0 <= power_factor <= 1,\
+            'The power_factor has to be a number from 0 to 1.'
 
-        tan = np.sqrt(1/power_factor_capacitive**2 - 1)
-        return (self.reactive() + self.active()*tan)*ureg.Unit('kvar')
+        tan = np.sqrt(1/power_factor**2 - 1)
+        return (self.reactive() + self.active()*tan).to(ureg.Unit('kvar'))

@@ -1,6 +1,8 @@
 from ..settings import ureg, VOLTAGE_FF, VOLTAGE_FN
 import numpy as np
-from .tables import Amperage, TensionFall, NotInTableError
+from .tables import (
+    Amperage, TensionFall, NotInTableError, Grouping
+)
 
 class CondutorSection:
     material: str = None
@@ -27,6 +29,12 @@ class CondutorSection:
 
         self.amperage = Amperage(self.material, self.insulator)
         self.tension_fall = TensionFall()
+    
+    def grouping_correction(self, num_of_circuits):
+        cf = Grouping(
+            self.method. num_of_circuits).correction_factor()
+        self.table *= correction
+        return self
     
     def by_amperage(
             self, current: ureg.Quantity) -> ureg.Quantity:
@@ -66,11 +74,11 @@ class CondutorSection:
         vff = VOLTAGE_FF
         vfn = VOLTAGE_FN
 
-        if self.by_ampacity(current) <= 25*ureg.millimeter**2:
+        if self.by_amperage(current) <= 25*ureg.millimeter**2:
             result = self.by_voltage_drop_simple(
                 current, distance, max_fall)
             
-            for section in self.ampacity.table.index:
+            for section in self.amperage.table.index:
                 if result.magnitude <= section:
                     return section * ureg.millimeter**2
         else:
