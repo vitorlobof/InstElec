@@ -7,7 +7,7 @@ from .temperature_correction import TemperatureCorrectionAmbient
 
 class CondutorSection:
     material: str = None
-    electrical_conductivity: ureg.Quantity = None
+    electrical_resistivity: ureg.Quantity = None
     
     insulator: str = None
 
