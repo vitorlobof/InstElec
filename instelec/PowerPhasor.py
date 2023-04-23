@@ -101,7 +101,7 @@ class PowerPhasor(complex):
             'The power_factor has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor**2 - 1)
-        return (self.reactive() - self.active()*tan).to(ureg.Unit('kvar'))
+        return self.reactive() - (self.active()*tan).to(ureg.Unit('kvar'))
     
     def capacitive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
         """
@@ -115,4 +115,4 @@ class PowerPhasor(complex):
             'The power_factor has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor**2 - 1)
-        return (self.reactive() + self.active()*tan).to(ureg.Unit('kvar'))
+        return self.reactive() + (self.active()*tan).to(ureg.Unit('kvar'))
