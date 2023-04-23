@@ -1,15 +1,15 @@
 from ..settings import TEMPERATURE_TABLE
 
 class TemperatureCorrection:
-    insulator = None
     place = None
 
-    def __init__(self) -> None:
+    def __init__(self, insulator) -> None:
         filepath = TEMPERATURE_TABLE[self.place]
         self.table = (
             pd.read_csv(filepath, index_col='temperatura')
             .astype('float16')
         )
+        self.insulator = insulator
     
     def correction_factor(
             self, temperature: ureg.Quantity) -> float:
@@ -23,17 +23,8 @@ class TemperatureCorrection:
         raise NotInTableError(
             'O isolante utilizado não suporta essa temperatura.')
 
-class Ambient(TemperatureCorrection):
+class TemperatureCorrectionAmbient(TemperatureCorrection):
     place = 'ambiente'
 
-class Ground(TemperatureCorrection):
+class TemperatureCorrectionGround(TemperatureCorrection):
     place = 'solo'
-
-class AmbientPVC(Ambient):
-    insulator = 'PVC'
-
-class AmbientEPR(Ambient):
-    insulator = 'EPR'
-
-class AmbientXLPE(Ambient):
-    insulator = 'XLPE'

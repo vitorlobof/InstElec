@@ -3,6 +3,7 @@ import numpy as np
 from .tables import (
     Amperage, TensionFall, NotInTableError, Grouping
 )
+from .temperature_correction import TemperatureCorrectionAmbient
 
 class CondutorSection:
     material: str = None
@@ -33,6 +34,12 @@ class CondutorSection:
     def grouping_correction(self, num_of_circuits):
         cf = Grouping(
             self.method. num_of_circuits).correction_factor()
+        self.table *= correction
+        return self
+    
+    def temperature_correction(self, temperature):
+        cf = TemperatureCorrectionAmbient(
+            self.insulator).correction_factor(temperature)
         self.table *= correction
         return self
     
