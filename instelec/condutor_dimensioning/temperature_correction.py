@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 from ..settings import TEMPERATURE_TABLE
 
 class TemperatureCorrection:
