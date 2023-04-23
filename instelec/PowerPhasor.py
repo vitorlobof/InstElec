@@ -95,10 +95,8 @@ class PowerPhasor(complex):
         requires to correct the power factor to the given
         power_factor.
         """
-        assert isinstance(power_factor, (int, float)),\
-            'The power_factor has to be a number from 0 to 1.'
-        assert 0 <= power_factor <= 1,\
-            'The power_factor has to be a number from 0 to 1.'
+        assert isinstance(power_factor, (int, float)), 'The power_factor has to be a number from 0 to 1.'
+        assert 0 <= power_factor <= 1, 'The power_factor has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor**2 - 1)
         return self.reactive() - (self.active()*tan).to(ureg.Unit('kvar'))
@@ -109,10 +107,8 @@ class PowerPhasor(complex):
         requires to correct the power factor to the given
         power_factor.
         """
-        assert isinstance(power_factor, (int, float)),\
-            'The power_factor has to be a number from 0 to 1.'
-        assert 0 <= power_factor <= 1,\
-            'The power_factor has to be a number from 0 to 1.'
+        assert isinstance(power_factor, (int, float)), 'The power_factor has to be a number from 0 to 1.'
+        assert 0 <= power_factor <= 1, 'The power_factor has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor**2 - 1)
         return self.reactive() + (self.active()*tan).to(ureg.Unit('kvar'))
