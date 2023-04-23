@@ -32,7 +32,7 @@ AMPERAGE_TABLE = {
     }
 }
 
-TENSION_FALL_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'tension_fall.csv')
+VOLTAGE_DROP_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'tension_fall.csv')
 
 TEMPERATURE_TABLE = {
     'ambiente': os.path.join(

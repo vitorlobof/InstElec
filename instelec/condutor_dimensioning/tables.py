@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 from ..settings import (
-    ureg, AMPERAGE_TABLE, TENSION_FALL_TABLE, GROUPING_TABLE)
+    ureg, AMPERAGE_TABLE, VOLTAGE_DROP_TABLE, GROUPING_TABLE)
 
 class NotInTableError(Exception):
     pass
@@ -73,7 +73,7 @@ class Amperage:
         nominal_current = self.table.loc[section.magnitude, col]
         return nominal_current * ureg.ampere
 
-class TensionFall:
+class VoltageDrop:
     def __init__(self) -> None:
         filepath = TENSION_FALL_TABLE
         self.table = (

@@ -1,7 +1,7 @@
 from ..settings import ureg, VOLTAGE_FF, VOLTAGE_FN
 import numpy as np
 from .tables import (
-    Amperage, TensionFall, NotInTableError, Grouping
+    Amperage, VoltageDrop, NotInTableError, Grouping
 )
 from .temperature_correction import TemperatureCorrectionAmbient
 
@@ -29,7 +29,7 @@ class CondutorSection:
         self.phase_num = phase_num
 
         self.amperage = Amperage(self.material, self.insulator)
-        self.tension_fall = TensionFall()
+        self.voltage_drop = VoltageDrop()
     
     def grouping_correction(self, num_of_circuits):
         cf = Grouping(
