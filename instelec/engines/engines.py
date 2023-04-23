@@ -13,10 +13,7 @@ class Engine:
         phase_num: int,
         efficiency: float=None
     ) -> None:
-        if efficiency is None:
-            efficiency = 1.0
-
-        assert isinstance(efficiency, (int, float)) and 0 <= efficiency <= 1, 'A eficiência deve ser um número de 0 a 1.'
+        assert (efficiency is None) or (isinstance(efficiency, (int, float)) and 0 <= efficiency <= 1), 'A eficiência deve ser um número de 0 a 1.'
 
         self.power = power_phasor
         self.phase_num = phase_num
