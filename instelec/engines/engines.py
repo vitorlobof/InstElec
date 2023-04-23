@@ -19,6 +19,15 @@ class Engine:
         self.phase_num = phase_num
         self.efficiency = efficiency
     
+    def __repr__(self) -> str:
+        string = [
+            f'Active power: {round(self.power.active(), 2)}',
+            f'Reactive power: {round(self.power.reactive(), 2)}',
+            f'Phase num: {self.phase_num}',
+            f'Efficiency: {self.efficiency}'
+        ]
+        return '\n'.join(string)
+    
     @classmethod
     def from_nominal_power(
         cls,
