@@ -31,6 +31,16 @@ class CondutorSection:
         self.amperage = Amperage(self.material, self.insulator)
         self.voltage_drop = VoltageDrop()
     
+    def __repr__(self) -> str:
+        string = [
+            f'Material: {self.material}',
+            f'Insulator: {self.insulator}',
+            f'Instalation method: {self.method}',
+            f'Power factor: {self.power_factor}',
+            f'Phase number: {self.phase_num}'
+        ]
+        return '\n'.join(string)
+    
     def grouping_correction(self, num_of_circuits):
         cf = Grouping(
             self.method. num_of_circuits).correction_factor()
