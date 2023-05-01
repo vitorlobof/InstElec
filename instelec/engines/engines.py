@@ -4,12 +4,12 @@ import numpy as np
 
 from .simultaneity_factor import simultaneity_factor
 from ..settings import ureg, VOLTAGE_FF, VOLTAGE_FN
-from ..PowerPhasor import PowerPhasor
+from ..PowerTriangle import PowerTriangle
 
 class Engine:
     def __init__(
         self,
-        power_phasor: PowerPhasor,
+        power_phasor: PowerTriangle,
         phase_num: int,
         efficiency: float=None
     ) -> None:
@@ -63,7 +63,7 @@ class Engine:
         """
         assert isinstance(power_factor, (int, float)) and 0 <= power_factor <= 1, 'A potência deve ser um número entre 0 e 1.'
 
-        phasor = PowerPhasor(
+        phasor = PowerTriangle(
             axis_power.to('kW') / (efficiency * power_factor),
             power_factor
         )
@@ -77,13 +77,17 @@ class Engine:
         """
         Calcula a corrente que passa pelo motor.
         """
-        apparent = self.power.apparent()
+        active = self.power.active()
+        pf = self.power_factor()
 
         if self.phase_num == 1:
-            current = apparent/VOLTAGE_FN
+            current = active/(VOLTAGE_FN*pf)
+        elif self.phase_num == 2:
+            current = active/(VOLTAGE_FF*pf)
+        elif self.phase_num == 3:
+            current = active/(sqrt(3)*VOLTAGE_FF*pf)
         else:
-            x = np.sqrt(2 * (1 - np.cos(np.pi/self.phase_num)))
-            current = apparent/(x*VOLTAGE_FF)
+            current = active/(self.phase_num*VOLTAGE_FN*pf)
         
         return current.to_base_units()
     
@@ -112,7 +116,7 @@ class EngineGroup:
     def __len__(self) -> int:
         return sum(self.engines_count.values())
 
-    def demand(self) -> PowerPhasor:
+    def demand(self) -> PowerTriangle:
         """
         Calculates and returns the demand of the group
         of engines.

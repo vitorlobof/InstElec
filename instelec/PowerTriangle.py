@@ -1,7 +1,7 @@
 import numpy as np
 from .settings import ureg
 
-class PowerPhasor(complex):
+class PowerTriangle(complex):
     """
     Receives two powers of the power triangle or one power
     and the power factor.
@@ -22,46 +22,46 @@ class PowerPhasor(complex):
         else:
             raise ValueError('A potência só pode apresentar as unidades kVA, kW ou kvar.')
 
-        return super(PowerPhasor, cls).__new__(cls, x, y)
+        return super(PowerTriangle, cls).__new__(cls, x, y)
     
-    def __neg__(self) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__neg__()
-        return super(PowerPhasor, self).__new__(
+    def __neg__(self) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__neg__()
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __add__(self, other) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__add__(other)
-        return super(PowerPhasor, self).__new__(
+    def __add__(self, other) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__add__(other)
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
     
-    def __radd__(self, other) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__radd__(other)
-        return super(PowerPhasor, self).__new__(
+    def __radd__(self, other) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__radd__(other)
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
     
-    def __sub__(self, other) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__sub__(other)
-        return super(PowerPhasor, self).__new__(
+    def __sub__(self, other) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__sub__(other)
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
     
-    def __rsub__(self, other) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__rsub__(other)
-        return super(PowerPhasor, self).__new__(
+    def __rsub__(self, other) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__rsub__(other)
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
     
-    def __mul__(self, other) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__mul__(other)
-        return super(PowerPhasor, self).__new__(
+    def __mul__(self, other) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__mul__(other)
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __rmul__(self, other) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__rmul__(other)
-        return super(PowerPhasor, self).__new__(
+    def __rmul__(self, other) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__rmul__(other)
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
     
-    def __pow__(self, other) -> 'PowerPhasor':
-        val = super(PowerPhasor, self).__pow__(other)
-        return super(PowerPhasor, self).__new__(
+    def __pow__(self, other) -> 'PowerTriangle':
+        val = super(PowerTriangle, self).__pow__(other)
+        return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
         
     def apparent(self) -> float:
