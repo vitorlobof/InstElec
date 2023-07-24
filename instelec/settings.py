@@ -32,7 +32,8 @@ AMPERAGE_TABLE = {
     }
 }
 
-VOLTAGE_DROP_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'tension_fall.csv')
+VOLTAGE_DROP_TABLE = os.path.join(
+    STATIC_DIR, 'condutor_dimensioning', 'tension_fall.csv')
 
 TEMPERATURE_TABLE = {
     'ambiente': os.path.join(
@@ -41,4 +42,5 @@ TEMPERATURE_TABLE = {
         STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ground.csv')
 }
 
-GROUPING_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'agrupamento.csv')
+GROUPING_TABLE = os.path.join(
+    STATIC_DIR, 'condutor_dimensioning', 'agrupamento.csv')

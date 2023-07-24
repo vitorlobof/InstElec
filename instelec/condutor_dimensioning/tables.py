@@ -3,8 +3,10 @@ import numpy as np
 from ..settings import (
     ureg, AMPERAGE_TABLE, VOLTAGE_DROP_TABLE, GROUPING_TABLE)
 
+
 class NotInTableError(Exception):
     pass
+
 
 class Amperage:
     # Traduz o número de fase para o número de condutores
@@ -17,7 +19,7 @@ class Amperage:
             pd.read_csv(filepath, index_col='nominal_sections')
             .astype('float16')
         )
-    
+
     def apply_correction_factors(self, *factors):
         """
         Aplica os fatores de correção à tabela de ampacidade.
@@ -25,7 +27,7 @@ class Amperage:
         correction = 1
         for factor in factors:
             correction *= factor
-        
+
         self.table *= correction
         return self
 
@@ -53,7 +55,7 @@ class Amperage:
 
         raise NotInTableError(
             'A corrente é alta demais, não se encontra na tabela.')
-    
+
     def get_nominal_current(
         self,
         section: ureg.Quantity,
@@ -72,6 +74,7 @@ class Amperage:
         nominal_current = self.table.loc[section.magnitude, col]
         return nominal_current * ureg.ampere
 
+
 class VoltageDrop:
     def __init__(self) -> None:
         filepath = VOLTAGE_DROP_TABLE
@@ -80,14 +83,15 @@ class VoltageDrop:
             .astype('float16')
         )
 
+
 class Grouping:
     def __init__(self, method: str, num_circuits: int) -> None:
         filepath = GROUPING_TABLE
         self.table = pd.read_csv(filepath)
         self.table.index += 1
-        
+
         self.method = method
         self.num_circuits = num_circuits
-    
+
     def correction_factor(self) -> float:
         return self.table.loc[self.num_circuits, self.method]

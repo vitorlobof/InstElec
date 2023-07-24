@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from ..settings import TEMPERATURE_TABLE, ureg
 
+
 class TemperatureCorrection:
     place = None
 
@@ -12,7 +13,7 @@ class TemperatureCorrection:
             .astype('float16')
         )
         self.insulator = insulator
-    
+
     def correction_factor(
             self, temperature: ureg.Quantity) -> float:
         temperature = temperature.to('celsius').magnitude
@@ -26,8 +27,10 @@ class TemperatureCorrection:
         raise NotInTableError(
             'O isolante utilizado não suporta essa temperatura.')
 
+
 class TemperatureCorrectionAmbient(TemperatureCorrection):
     place = 'ambiente'
+
 
 class TemperatureCorrectionGround(TemperatureCorrection):
     place = 'solo'
