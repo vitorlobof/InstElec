@@ -45,14 +45,14 @@ class CondutorSection:
 
     def grouping_correction(self, num_of_circuits):
         cf = Grouping(
-            self.method. num_of_circuits).correction_factor()
-        self.table *= correction
+            self.method, num_of_circuits).correction_factor()
+        self.amperage.table *= cf
         return self
 
     def temperature_correction(self, temperature):
         cf = TemperatureCorrectionAmbient(
             self.insulator).correction_factor(temperature)
-        self.table *= correction
+        self.amperage.table *= cf
         return self
 
     def by_amperage(
