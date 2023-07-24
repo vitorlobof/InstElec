@@ -131,7 +131,7 @@ class CondutorSection:
 
         result = result.to(ureg.millimeter**2)
 
-        for section in self.ampacity.table.index:
+        for section in self.amperage.table.index:
             if result.magnitude <= section:
                 return section*ureg.millimeter**2
         
@@ -145,7 +145,7 @@ class CondutorSection:
         else:
             result = 0.5 * phase_section
         
-        for section in self.ampacity.table.index:
+        for section in self.amperage.table.index:
             if result.magnitude <= section:
                 return section*ureg.millimeter**2
         
