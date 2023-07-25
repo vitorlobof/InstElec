@@ -7,13 +7,11 @@ A Calculadora de Instalação Elétrica é uma ferramenta desenvolvida em [Pytho
 - **Cálculo de Dimensionamento**: A calculadora permite determinar os parâmetros necessários para o dimensionamento de condutores, disjuntores, eletrodutos, entre outros componentes, de acordo com as diretrizes da NR10.
 <!-- - **Verificação de Conformidade**: A ferramenta realiza uma verificação automática para garantir que a instalação elétrica esteja em conformidade com as normas de segurança especificadas pela NR10. -->
 
-<!-- ## Como Usar
+## Como Usar
 
 1. Clone ou faça o download do repositório para o seu ambiente local.
 2. Certifique-se de ter o Python instalado em sua máquina.
-3. Execute o script principal `calculadora_instalacao.py` em um ambiente Python de sua escolha.
-4. Siga as instruções fornecidas pela calculadora para inserir os parâmetros de entrada necessários.
-5. A calculadora realizará os cálculos e exibirá os resultados na saída do programa. -->
+3. Crie um Jupyter Notebook e use como mostrado nos exemplos.
 
 ## Contribuição
 
