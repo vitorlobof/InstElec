@@ -91,7 +91,7 @@ class PowerTriangle(complex):
         """
         return self.real/abs(self)
 
-    def indutive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
+    def inductive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
         """
         Calculates and returns the power the capacitive bank
         requires to correct the power factor to the given
@@ -102,7 +102,7 @@ class PowerTriangle(complex):
         assert 0 <= power_factor <= 1, 'The power_factor has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor**2 - 1)
-        return self.reactive() - (self.active()*tan).to(ureg.Unit('kvar'))
+        return (self.active()*tan).to(ureg.Unit('kvar')) - self.reactive()
 
     def capacitive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
         """
@@ -114,5 +114,11 @@ class PowerTriangle(complex):
                           ), 'The power_factor has to be a number from 0 to 1.'
         assert 0 <= power_factor <= 1, 'The power_factor has to be a number from 0 to 1.'
 
-        tan = np.sqrt(1/power_factor**2 - 1)
-        return self.reactive() + (self.active()*tan).to(ureg.Unit('kvar'))
+        tan = - np.sqrt(1/power_factor**2 - 1)
+        return (self.active()*tan).to(ureg.Unit('kvar')) - self.reactive()
+    
+    def power_factor_to(self, power_factor: float) -> (ureg.Quantity, ureg.Quantity):
+        return (
+            self.capacitive_power_factor_to(power_factor),
+            self.inductive_power_factor_to(power_factor)
+        )
