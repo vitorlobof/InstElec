@@ -23,12 +23,9 @@ AMPERAGE_TABLE = {
         'XLPE': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'cobre_epr_ou_xlpe.csv')
     },
     'aluminum': {
-        'PVC': os.path.join(
-            STATIC_DIR, 'condutor_dimensioning', 'aluminio_pvc.csv'),
-        'EPR': os.path.join(
-            STATIC_DIR, 'condutor_dimensioning', 'aluminio_epr_ou_xlpe.csv'),
-        'XLPE': os.path.join(
-            STATIC_DIR, 'condutor_dimensioning', 'aluminio_epr_ou_xlpe.csv')
+        'PVC': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'aluminio_pvc.csv'),
+        'EPR': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'aluminio_epr_ou_xlpe.csv'),
+        'XLPE': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'aluminio_epr_ou_xlpe.csv')
     }
 }
 
@@ -36,11 +33,8 @@ VOLTAGE_DROP_TABLE = os.path.join(
     STATIC_DIR, 'condutor_dimensioning', 'tension_fall.csv')
 
 TEMPERATURE_TABLE = {
-    'ambiente': os.path.join(
-        STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ambient.csv'),
-    'solo': os.path.join(
-        STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ground.csv')
+    'ambiente': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ambient.csv'),
+    'solo': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ground.csv')
 }
 
-GROUPING_TABLE = os.path.join(
-    STATIC_DIR, 'condutor_dimensioning', 'agrupamento.csv')
+GROUPING_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'agrupamento.csv')
