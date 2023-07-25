@@ -31,6 +31,27 @@ class Engine:
         return '\n'.join(string)
 
     @classmethod
+    def from_axis_power(
+        cls,
+        axis_power: ureg.Quantity,
+        phase_num: int,
+        power_factor: float,
+        efficiency: float,
+    ):
+        """
+        Instancia a classe através da potência de eixo do motor.
+        """
+        assert isinstance(power_factor, (int, float)
+                          ) and 0 <= power_factor <= 1, 'A potência deve ser um número entre 0 e 1.'
+
+        phasor = PowerTriangle(
+            axis_power.to('kW') / (efficiency * power_factor),
+            power_factor
+        )
+        cls.axis_power = axis_power
+        return cls(phasor, phase_num, efficiency=efficiency)
+
+    @classmethod
     def from_nominal_power(
         cls,
         nominal_power: ureg.Quantity,
@@ -52,27 +73,6 @@ class Engine:
             phase_num,
             efficiency=efficiency
         )
-
-    @classmethod
-    def from_axis_power(
-        cls,
-        axis_power: ureg.Quantity,
-        phase_num: int,
-        power_factor: float,
-        efficiency: float,
-    ):
-        """
-        Instancia a classe através da potência de eixo do motor.
-        """
-        assert isinstance(power_factor, (int, float)
-                          ) and 0 <= power_factor <= 1, 'A potência deve ser um número entre 0 e 1.'
-
-        phasor = PowerTriangle(
-            axis_power.to('kW') / (efficiency * power_factor),
-            power_factor
-        )
-        cls.axis_power = axis_power
-        return cls(phasor, phase_num, efficiency=efficiency)
 
     def demand(self) -> ureg.Quantity:
         return self.power.active()
