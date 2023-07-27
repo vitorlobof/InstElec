@@ -23,7 +23,8 @@ class CondutorSection:
         phase_num: int
     ) -> None:
         assert isinstance(
-            power_factor, float) and 0 <= power_factor <= 1, 'O fator de potência tem que ser um número de 0 a 1.'
+            power_factor, float) and 0 <= power_factor <= 1,\
+            'O fator de potência tem que ser um número de 0 a 1.'
         assert phase_num in {1, 3}, 'O motor deve ser monofásico ou trifásico.'
 
         self.method = instalation_method
@@ -74,13 +75,13 @@ class CondutorSection:
         vff = VOLTAGE_FF
         vfn = VOLTAGE_FN
         L = distance
-        I = current
+        Ic = current
         p = self.electrical_resistivity
 
         if self.phase_num == 1:
-            section = (2*p*L*I)/(max_fall*vfn)
+            section = (2*p*L*Ic)/(max_fall*vfn)
         elif self.phase_num == 3:
-            section = (np.sqrt(3)*p*L*I)/(max_fall*vff)
+            section = (np.sqrt(3)*p*L*Ic)/(max_fall*vff)
 
         return section.to(ureg.millimeter**2)
 
@@ -90,9 +91,6 @@ class CondutorSection:
         distance: ureg.Quantity,
         max_fall: float
     ) -> ureg.Quantity:
-        vff = VOLTAGE_FF
-        vfn = VOLTAGE_FN
-
         if self.by_amperage(current) <= 25*ureg.millimeter**2:
             result = self.by_voltage_drop_simple(
                 current, distance, max_fall)
@@ -107,11 +105,10 @@ class CondutorSection:
 
                 current = current.to(ureg.ampere)
                 distance = distance.to(ureg.meter)
-                vff = vff.to(ureg.volt)
 
                 fall = np.sqrt(3)*current*distance
                 fall *= row.R*cos + row.X*sin
-                fall /= 10*1*vff
+                fall /= 10*1*VOLTAGE_FF
 
                 if fall.magnitude <= 100*max_fall:
                     return idx*ureg.millimeter**2
@@ -140,7 +137,8 @@ class CondutorSection:
 
         raise NotInTableError('Não corresponde a nenhuma seção tabelada.')
 
-    def protection_condutor(self, phase_section: ureg.Quantity) -> ureg.Quantity:
+    def protection_condutor(
+            self, phase_section: ureg.Quantity) -> ureg.Quantity:
         if phase_section <= 16 * ureg.millimeter**2:
             result = phase_section
         elif phase_section <= 35 * ureg.millimeter**2:

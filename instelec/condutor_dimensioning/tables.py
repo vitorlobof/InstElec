@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from ..settings import (
     ureg, AMPERAGE_TABLE, VOLTAGE_DROP_TABLE, GROUPING_TABLE)
 
