@@ -18,7 +18,7 @@ def simultaneity_factor(
     """Returns the simultaneity factor."""
     if num_of_engines == 1:
         return 1.0
-    
+
     table = pd.read_excel(os.path.join('static', 'simultaneity_factor.xlsx'))
 
     column = get_column(table, num_of_engines)
@@ -49,7 +49,7 @@ def get_row(
     for idx, row in table.iterrows():
         inf_limit = row['inf_limit (HP)']
         sup_limit = row['sup_limit (HP)']
-        
+
         if np.isnan(sup_limit):
             sup_limit = float('inf')
 
