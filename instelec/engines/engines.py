@@ -14,8 +14,9 @@ class Engine:
         phase_num: int,
         efficiency: float = None
     ) -> None:
-        assert (efficiency is None) or (isinstance(efficiency, (int, float))
-                                        and 0 <= efficiency <= 1), 'A eficiência deve ser um número de 0 a 1.'
+        assert efficiency is None or\
+            (isinstance(efficiency, (int, float)) and 0 <= efficiency <= 1),\
+            'A eficiência deve ser um número de 0 a 1.'
 
         self.power = power_phasor
         self.phase_num = phase_num
@@ -41,8 +42,9 @@ class Engine:
         """
         Instancia a classe através da potência de eixo do motor.
         """
-        assert isinstance(power_factor, (int, float)
-                          ) and 0 <= power_factor <= 1, 'A potência deve ser um número entre 0 e 1.'
+        assert isinstance(power_factor, (int, float))\
+            and 0 <= power_factor <= 1,\
+            'A potência deve ser um número entre 0 e 1.'
 
         phasor = PowerTriangle(
             axis_power.to('kW') / (efficiency * power_factor),
@@ -61,10 +63,12 @@ class Engine:
         efficiency: float
     ):
         """
-        Instancia a classe através potência nominal e o fator de utilização do motor.
+        Instancia a classe através potência nominal e o fator de utilização
+        do motor.
         """
-        assert isinstance(
-            utilization_factor, float) and 0 <= utilization_factor <= 1, 'O fator de utilização deve ser um número entre 0 e 1.'
+        assert isinstance(utilization_factor, float)\
+            and 0 <= utilization_factor <= 1,\
+            'O fator de utilização deve ser um número entre 0 e 1.'
 
         axis_power = nominal_power * utilization_factor
         return cls.from_axis_power(
@@ -98,16 +102,16 @@ class Engine:
 
 class EngineGroup:
     def __init__(self, engines_count: Dict[Engine, int]) -> None:
-        assert isinstance(
-            engines_count, dict), 'The engines count has to be a dict.'
+        assert isinstance(engines_count, dict),\
+            'The engines count has to be a dict.'
 
         self.power = 0
         self.phase_num = 1
         for eng, count in engines_count.items():
-            assert isinstance(
-                eng, Engine), 'Every key in the engines count must be an instance of Engine.'
-            assert isinstance(
-                count, int) and count >= 1, 'The number of engines has to be a positive integer.'
+            assert isinstance(eng, Engine),\
+                'Every key in the engines count must be an instance of Engine.'
+            assert isinstance(count, int) and count >= 1,\
+                'The number of engines has to be a positive integer.'
 
             sf = simultaneity_factor(count, eng.power.active())
             self.power += count * eng.power * sf
