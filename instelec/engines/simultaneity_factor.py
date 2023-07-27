@@ -1,12 +1,15 @@
 from ..settings import ureg
 import pandas as pd
 import numpy as np
+import os
+
 
 class OutOfRangeError(Exception):
     """
     Levantado quando a potência não se encontra em nenhum dos
     intervalos para os quais a tabela tem valores.
     """
+
 
 def simultaneity_factor(
     num_of_engines: int,
@@ -16,12 +19,13 @@ def simultaneity_factor(
     if num_of_engines == 1:
         return 1.0
     
-    table = pd.read_excel(r'static\simultaneity_factor.xlsx')
+    table = pd.read_excel(os.path.join('static', 'simultaneity_factor.xlsx'))
 
     column = get_column(table, num_of_engines)
     row = get_row(table, axis_power)
 
     return table.loc[row, column]
+
 
 def get_column(table: pd.DataFrame, num_of_engines: int):
     """
@@ -31,6 +35,7 @@ def get_column(table: pd.DataFrame, num_of_engines: int):
         if num_of_engines <= value:
             return value
     return value
+
 
 def get_row(
     table: pd.DataFrame,
