@@ -79,6 +79,10 @@ class Engine:
         )
 
     def demand(self) -> ureg.Quantity:
+        """
+        Returns the demand of the engine. Which corresponds to
+        the active power of the engine power triangle.
+        """
         return self.power.active()
 
     def current(self) -> ureg.Quantity:
@@ -121,11 +125,17 @@ class EngineGroup:
         self.engines_count = engines_count
 
     def __iter__(self) -> Engine:
+        """
+        Yields each engine in the group, including repetitions.
+        """
         for engine, count in self.engines_count.items():
             for _ in range(count):
                 yield engine
 
     def __len__(self) -> int:
+        """
+        Returns the number of engines in the group.
+        """
         return sum(self.engines_count.values())
 
     def demand(self) -> ureg.Quantity:

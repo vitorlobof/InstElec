@@ -119,6 +119,11 @@ class PowerTriangle(complex):
         return (self.active()*tan).to(ureg.Unit('kvar')) - self.reactive()
     
     def power_factor_to(self, power_factor: float) -> (ureg.Quantity, ureg.Quantity):
+        """
+        Returns the range of values for the reactive power that
+        could be added to make the power factor bigger or equal
+        to the given value.
+        """
         return (
             self.capacitive_power_factor_to(power_factor),
             self.inductive_power_factor_to(power_factor)
