@@ -1,3 +1,4 @@
+from typing import Self
 import numpy as np
 from .settings import ureg
 
@@ -7,7 +8,7 @@ class PowerTriangle(complex):
     Receives two powers of the power triangle or one power
     and the power factor.
     """
-    def __new__(cls, power: ureg.Quantity, power_factor: float) -> None:
+    def __new__(cls, power: ureg.Quantity, power_factor: float):
         assert isinstance(power_factor, (int, float)) and 0 <= power_factor <= 1,\
             'The power factor has to be a number from 0 to 1.'
 
@@ -26,42 +27,42 @@ class PowerTriangle(complex):
 
         return super(PowerTriangle, cls).__new__(cls, x, y)
 
-    def __neg__(self) -> 'PowerTriangle':
+    def __neg__(self) -> Self:
         val = super(PowerTriangle, self).__neg__()
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __add__(self, other) -> 'PowerTriangle':
+    def __add__(self, other) -> Self:
         val = super(PowerTriangle, self).__add__(other)
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __radd__(self, other) -> 'PowerTriangle':
+    def __radd__(self, other) -> Self:
         val = super(PowerTriangle, self).__radd__(other)
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __sub__(self, other) -> 'PowerTriangle':
+    def __sub__(self, other) -> Self:
         val = super(PowerTriangle, self).__sub__(other)
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __rsub__(self, other) -> 'PowerTriangle':
+    def __rsub__(self, other) -> Self:
         val = super(PowerTriangle, self).__rsub__(other)
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __mul__(self, other) -> 'PowerTriangle':
+    def __mul__(self, other) -> Self:
         val = super(PowerTriangle, self).__mul__(other)
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __rmul__(self, other) -> 'PowerTriangle':
+    def __rmul__(self, other) -> Self:
         val = super(PowerTriangle, self).__rmul__(other)
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
-    def __pow__(self, other) -> 'PowerTriangle':
+    def __pow__(self, other) -> Self:
         val = super(PowerTriangle, self).__pow__(other)
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
