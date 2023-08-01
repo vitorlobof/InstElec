@@ -1,3 +1,4 @@
+from typing import Self
 from ..settings import ureg, VOLTAGE_FF, VOLTAGE_FN
 import numpy as np
 from .tables import (
@@ -6,21 +7,31 @@ from .tables import (
 from .temperature_correction import TemperatureCorrectionAmbient
 
 
+def above_min_section(func):
+    def wrapper(self, *args, **kwargs):
+        section = func(self, *args, **kwargs)
+        min_sec = self.min_section
+        return max(section, self.min_section)
+    
+    return wrapper
+
+
 class CondutorSection:
-    material: str = None
-    electrical_resistivity: ureg.Quantity = None
+    material: str
+    electrical_resistivity: ureg.Quantity
 
-    insulator: str = None
+    insulator: str
 
-    continuous_service_max_temperature = None
-    overcharge_limit_temperature = None
-    sc_limit_temperature = None
+    continuous_service_max_temperature: ureg.Quantity
+    overcharge_limit_temperature: ureg.Quantity
+    sc_limit_temperature: ureg.Quantity
 
     def __init__(
         self,
         instalation_method: str,
         power_factor: float,
-        phase_num: int
+        phase_num: int,
+        lights: bool = False
     ) -> None:
         assert isinstance(
             power_factor, float) and 0 <= power_factor <= 1,\
@@ -34,6 +45,8 @@ class CondutorSection:
         self.amperage = Amperage(self.material, self.insulator)
         self.voltage_drop = VoltageDrop()
 
+        self.lights = lights
+
     def __repr__(self) -> str:
         string = [
             f'Material: {self.material}',
@@ -44,18 +57,27 @@ class CondutorSection:
         ]
         return '\n'.join(string)
 
-    def grouping_correction(self, num_of_circuits):
+    @property
+    def min_section(self):
+        """
+        Meant to set the minimum value for a section, it will
+        be used by the above_min_section decorator.
+        """
+        return 0 * ureg.millimeter**2
+
+    def grouping_correction(self, num_of_circuits: int) -> Self:
         cf = Grouping(
             self.method, num_of_circuits).correction_factor()
         self.amperage.table *= cf
         return self
 
-    def temperature_correction(self, temperature):
+    def temperature_correction(self, temperature: ureg.Quantity) -> Self:
         cf = TemperatureCorrectionAmbient(
             self.insulator).correction_factor(temperature)
         self.amperage.table *= cf
         return self
 
+    @above_min_section
     def by_amperage(
             self, current: ureg.Quantity) -> ureg.Quantity:
         return self.amperage.get_section(
@@ -85,6 +107,7 @@ class CondutorSection:
 
         return section.to(ureg.millimeter**2)
 
+    @above_min_section
     def by_voltage_drop(
         self,
         current: ureg.Quantity,
@@ -115,6 +138,7 @@ class CondutorSection:
 
         raise NotInTableError('Não corresponde a nenhuma seção tabelada.')
 
+    @above_min_section
     def by_short_circuit(
         self,
         simmetric_short_circuit_current: ureg.Quantity,
@@ -157,8 +181,9 @@ class Cupper:
     material = 'cupper'
     electrical_resistivity = 1/56*10**(-6)*(ureg.ohm*ureg.meter)
 
-    def min_section(self, lights=False) -> ureg.Quantity:
-        if lights:
+    @property
+    def min_section(self):
+        if self.lights:
             return 1.5 * ureg.millimeter**2
         else:
             return 2.5 * ureg.millimeter**2
@@ -168,7 +193,8 @@ class Aluminum:
     material = 'aluminum'
     electrical_resistivity = 2.82*10**(-8)*(ureg.ohm*ureg.meter)
 
-    def min_section(self, lights=False) -> ureg.Quantity:
+    @property
+    def min_section(self):
         return 16 * ureg.millimeter**2
 
 
