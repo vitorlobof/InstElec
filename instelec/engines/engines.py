@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Self
 
 import numpy as np
 
@@ -61,7 +61,7 @@ class Engine:
         phase_num: int,
         power_factor: float,
         efficiency: float
-    ):
+    ) -> Self:
         """
         Instancia a classe através potência nominal e o fator de utilização
         do motor.
@@ -128,7 +128,7 @@ class EngineGroup:
     def __len__(self) -> int:
         return sum(self.engines_count.values())
 
-    def demand(self) -> PowerTriangle:
+    def demand(self) -> ureg.Quantity:
         """
         Calculates and returns the demand of the group
         of engines.
