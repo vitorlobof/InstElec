@@ -8,6 +8,10 @@ from .temperature_correction import TemperatureCorrectionAmbient
 
 
 def above_min_section(func):
+    """
+    A decorator to garantee any section outputed will be
+    bigger or equal to the min_section.
+    """
     def wrapper(self, *args, **kwargs):
         section = func(self, *args, **kwargs)
         min_sec = self.min_section
@@ -30,8 +34,7 @@ class CondutorSection:
         self,
         instalation_method: str,
         power_factor: float,
-        phase_num: int,
-        lights: bool = False
+        phase_num: int
     ) -> None:
         assert isinstance(
             power_factor, float) and 0 <= power_factor <= 1,\
@@ -44,8 +47,6 @@ class CondutorSection:
 
         self.amperage = Amperage(self.material, self.insulator)
         self.voltage_drop = VoltageDrop()
-
-        self.lights = lights
 
     def __repr__(self) -> str:
         string = [
@@ -66,12 +67,19 @@ class CondutorSection:
         return 0 * ureg.millimeter**2
 
     def grouping_correction(self, num_of_circuits: int) -> Self:
+        """
+        Applies gruping factor to the amperage table.
+        """
         cf = Grouping(
             self.method, num_of_circuits).correction_factor()
         self.amperage.table *= cf
         return self
 
     def temperature_correction(self, temperature: ureg.Quantity) -> Self:
+        """
+        Applies the temperature correction factor to the amperage
+        table.
+        """
         cf = TemperatureCorrectionAmbient(
             self.insulator).correction_factor(temperature)
         self.amperage.table *= cf
@@ -80,11 +88,19 @@ class CondutorSection:
     @above_min_section
     def by_amperage(
             self, current: ureg.Quantity) -> ureg.Quantity:
+        """
+        Calculates the section of the conductor by the amperage
+        method.
+        """
         return self.amperage.get_section(
             current, self.method, self.phase_num)
 
     def nominal_current(
             self, section: ureg.Quantity) -> ureg.Quantity:
+        """
+        Returns the nominal current. The biggest current a
+        section supports considering the amperage table.
+        """
         return self.amperage.get_nominal_current(
             section, self.method, self.phase_num)
 
@@ -94,6 +110,12 @@ class CondutorSection:
         distance: ureg.Quantity,
         max_fall: float
     ) -> ureg.Quantity:
+        """
+        Calculates the section by the voltage drop method.
+        It should not be used by the user directly, it's here
+        to by called by the by_voltage_drop method.
+        """
+
         vff = VOLTAGE_FF
         vfn = VOLTAGE_FN
         L = distance
@@ -114,6 +136,10 @@ class CondutorSection:
         distance: ureg.Quantity,
         max_fall: float
     ) -> ureg.Quantity:
+        """
+        Calculates the section by the voltage drop method.
+        """
+
         if self.by_amperage(current) <= 25*ureg.millimeter**2:
             result = self.by_voltage_drop_simple(
                 current, distance, max_fall)
@@ -144,6 +170,10 @@ class CondutorSection:
         simmetric_short_circuit_current: ureg.Quantity,
         fault_elimination_time: ureg.Quantity
     ) -> ureg.Quantity:
+        """
+        Calculates the section by the short_circuit method.
+        """
+
         min_temp = self.continuous_service_max_temperature.magnitude
         max_temp = self.sc_limit_temperature.magnitude
 
@@ -163,6 +193,11 @@ class CondutorSection:
 
     def protection_condutor(
             self, phase_section: ureg.Quantity) -> ureg.Quantity:
+        """
+        Receives the section choosen to the phase condutor and
+        returns the section of the protection condutor.
+        """
+        
         if phase_section <= 16 * ureg.millimeter**2:
             result = phase_section
         elif phase_section <= 35 * ureg.millimeter**2:
@@ -178,8 +213,29 @@ class CondutorSection:
 
 
 class Cupper:
+    """
+    Defines the properties of a cupper wire.
+    """
+
     material = 'cupper'
     electrical_resistivity = 1/56*10**(-6)*(ureg.ohm*ureg.meter)
+
+    # Just add the lights kwarg to the __init__ method for it
+    # be used by the min_section property.
+    def __init__(
+        self,
+        instalation_method: str,
+        power_factor: float,
+        phase_num: int,
+        lights: bool = False
+    ) -> None:
+        super().__init__(
+            instalation_method,
+            power_factor,
+            phase_num
+        )
+
+        self.lights = lights
 
     @property
     def min_section(self):
@@ -189,8 +245,12 @@ class Cupper:
             return 2.5 * ureg.millimeter**2
 
 
-class Aluminum:
-    material = 'aluminum'
+class Aluminium:
+    """
+    Defines the properties of an aluminium wire.
+    """
+
+    material = 'aluminium'
     electrical_resistivity = 2.82*10**(-8)*(ureg.ohm*ureg.meter)
 
     @property
@@ -199,6 +259,10 @@ class Aluminum:
 
 
 class PVC:
+    """
+    Defines the properties of a wire isolated by PVC.
+    """
+
     insulator = 'PVC'
 
     continuous_service_max_temperature = ureg.Quantity(70, 'celsius')
@@ -207,6 +271,10 @@ class PVC:
 
 
 class EPR:
+    """
+    Defines the properties of a wire isolated by EPR.
+    """
+
     insulator = 'EPR'
 
     continuous_service_max_temperature = ureg.Quantity(90, 'celsius')
@@ -215,6 +283,10 @@ class EPR:
 
 
 class XLPE:
+    """
+    Defines the properties of a wire isolated by XLPE.
+    """
+
     insulator = 'XLPE'
 
     continuous_service_max_temperature = ureg.Quantity(90, 'celsius')
@@ -223,24 +295,48 @@ class XLPE:
 
 
 class CupperPVC(Cupper, PVC, CondutorSection):
+    """
+    Class used to calculate the section of a cupper wire
+    isolated with PVC.
+    """
     pass
 
 
 class CupperEPR(Cupper, EPR, CondutorSection):
+    """
+    Class used to calculate the section of a cupper wire
+    isolated with EPR.
+    """
     pass
 
 
 class CupperXLPE(Cupper, XLPE, CondutorSection):
+    """
+    Class used to calculate the section of a cupper wire
+    isolated with XLPE.
+    """
     pass
 
 
-class AluminumPVC(Aluminum, PVC, CondutorSection):
+class AluminiumPVC(Aluminium, PVC, CondutorSection):
+    """
+    Class used to calculate the section of a aluminium wire
+    isolated with PVC.
+    """
     pass
 
 
-class AluminumEPR(Aluminum, EPR, CondutorSection):
+class AluminiumEPR(Aluminium, EPR, CondutorSection):
+    """
+    Class used to calculate the section of a aluminium wire
+    isolated with EPR.
+    """
     pass
 
 
-class AluminumXLPE(Aluminum, XLPE, CondutorSection):
+class AluminiumXLPE(Aluminium, XLPE, CondutorSection):
+    """
+    Class used to calculate the section of a aluminium wire
+    isolated with XLPE.
+    """
     pass
