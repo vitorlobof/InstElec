@@ -1,13 +1,19 @@
+"""
+Defines the classes that will search the tables.
+The user is not meant to interact directly with them.
+"""
+
 import pandas as pd
 from ..settings import (
     ureg, AMPERAGE_TABLE, VOLTAGE_DROP_TABLE, GROUPING_TABLE)
-
-
-class NotInTableError(Exception):
-    pass
+from .exceptions import NotInTableError
 
 
 class Amperage:
+    """
+    Searches the amperage table.
+    """
+
     # Traduz o número de fase para o número de condutores
     # relacionados e ela.
     CONDUCTORS_NUM = {1: 2, 3: 3}
@@ -75,6 +81,10 @@ class Amperage:
 
 
 class VoltageDrop:
+    """
+    Searches the voltage drop table.
+    """
+
     def __init__(self) -> None:
         filepath = VOLTAGE_DROP_TABLE
         self.table = (
@@ -84,6 +94,10 @@ class VoltageDrop:
 
 
 class Grouping:
+    """
+    Searchs the grouping factor table.
+    """
+
     def __init__(self, method: str, num_circuits: int) -> None:
         filepath = GROUPING_TABLE
         self.table = pd.read_csv(filepath)
@@ -93,4 +107,7 @@ class Grouping:
         self.num_circuits = num_circuits
 
     def correction_factor(self) -> float:
+        """
+        Returns the grouping correction factor.
+        """
         return self.table.loc[self.num_circuits, self.method]

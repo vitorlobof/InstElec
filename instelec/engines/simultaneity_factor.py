@@ -1,7 +1,12 @@
-from ..settings import ureg
+"""
+Here to calculate the simultaneity factor that will be
+used by the EngineGroup class.
+"""
+
+import os
 import pandas as pd
 import numpy as np
-import os
+from ..settings import ureg
 
 
 class OutOfRangeError(Exception):
@@ -15,7 +20,9 @@ def simultaneity_factor(
     num_of_engines: int,
     axis_power: ureg.Quantity
 ) -> float:
-    """Returns the simultaneity factor."""
+    """
+    Returns the simultaneity factor.
+    """
     if num_of_engines == 1:
         return 1.0
 
