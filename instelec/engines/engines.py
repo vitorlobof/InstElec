@@ -24,8 +24,8 @@ class Engine:
 
     def __repr__(self) -> str:
         string = [
-            f'Active power: {round(self.power.active(), 2)}',
-            f'Reactive power: {round(self.power.reactive(), 2)}',
+            f'Active power: {round(self.power.active, 2)}',
+            f'Reactive power: {round(self.power.reactive, 2)}',
             f'Phase num: {self.phase_num}',
             f'Efficiency: {self.efficiency}'
         ]
@@ -83,14 +83,14 @@ class Engine:
         Returns the demand of the engine. Which corresponds to
         the active power of the engine power triangle.
         """
-        return self.power.active()
+        return self.power.active
 
     def current(self) -> ureg.Quantity:
         """
         Calcula a corrente que passa pelo motor.
         """
-        active = self.power.active()
-        pf = self.power.power_factor()
+        active = self.power.active
+        pf = self.power.power_factor
 
         if self.phase_num == 1:
             current = active/(VOLTAGE_FN*pf)
@@ -117,7 +117,7 @@ class EngineGroup:
             assert isinstance(count, int) and count >= 1,\
                 'The number of engines has to be a positive integer.'
 
-            sf = simultaneity_factor(count, eng.power.active())
+            sf = simultaneity_factor(count, eng.power.active)
             self.power += count * eng.power * sf
 
             self.phase_num = max(self.phase_num, eng.phase_num)
@@ -143,7 +143,7 @@ class EngineGroup:
         Calculates and returns the demand of the group
         of engines.
         """
-        return self.power.active()
+        return self.power.active
 
     def current_per_phase(self) -> list:
         """
@@ -156,7 +156,7 @@ class EngineGroup:
             for i in range(eng.phase_num):
                 phases[i] += eng.current()
             phases.sort()
-        
+
         return phases
 
     def charge_current(self) -> ureg.Quantity:

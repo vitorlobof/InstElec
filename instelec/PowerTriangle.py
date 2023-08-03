@@ -67,24 +67,28 @@ class PowerTriangle(complex):
         return super(PowerTriangle, self).__new__(
             type(self), val.real, val.imag)
 
+    @property
     def apparent(self) -> float:
         """
         Returns the apparent power.
         """
         return abs(self)*ureg.Unit('kVA')
 
+    @property
     def active(self) -> float:
         """
         Returns the active power.
         """
         return self.real*ureg.Unit('kW')
 
+    @property
     def reactive(self) -> float:
         """
         Returns the reactive power.
         """
         return self.imag*ureg.Unit('kvar')
 
+    @property
     def power_factor(self) -> float:
         """
         Returns the power factor. In other words, the cossine
@@ -103,7 +107,7 @@ class PowerTriangle(complex):
         assert 0 <= power_factor <= 1, 'The power_factor has to be a number from 0 to 1.'
 
         tan = np.sqrt(1/power_factor**2 - 1)
-        return (self.active()*tan).to(ureg.Unit('kvar')) - self.reactive()
+        return (self.active*tan).to(ureg.Unit('kvar')) - self.reactive
 
     def capacitive_power_factor_to(self, power_factor: float) -> ureg.Quantity:
         """
@@ -116,8 +120,8 @@ class PowerTriangle(complex):
         assert 0 <= power_factor <= 1, 'The power_factor has to be a number from 0 to 1.'
 
         tan = - np.sqrt(1/power_factor**2 - 1)
-        return (self.active()*tan).to(ureg.Unit('kvar')) - self.reactive()
-    
+        return (self.active*tan).to(ureg.Unit('kvar')) - self.reactive
+
     def power_factor_to(self, power_factor: float) -> (ureg.Quantity, ureg.Quantity):
         """
         Returns the range of values for the reactive power that
