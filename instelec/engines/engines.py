@@ -151,16 +151,12 @@ class EngineGroup:
         Returns a list with the current in each fase in
         decreasing order.
         """
-        currents = sorted(
-            [(eng.phase_num, eng.current()) for eng in self],
-            reverse=True
-        )
-
-        phases = [0]*currents[0][0]
-        for phase_num, current in currents:
-            for i in range(phase_num):
-                phases[i] += current
-            phases.sort(reverse=True)
+        phases = [0]*self.phase_num
+        for eng in self:
+            for i in range(eng.phase_num):
+                phases[i] += eng.current()
+            phases.sort()
+        
         return phases
 
     def charge_current(self) -> ureg.Quantity:
@@ -168,6 +164,6 @@ class EngineGroup:
         Calculates the charge current. The highest current
         between the phases.
         """
-        # The phases are sorted in decreasing order. The
-        # first term is the bigger.
-        return self.current_per_phase()[0]
+        # The phases are sorted in increasing order. The
+        # last term is the bigger.
+        return self.current_per_phase()[-1]
