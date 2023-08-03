@@ -26,6 +26,16 @@ class PowerTriangle(complex):
                 'A potência só pode apresentar as unidades kVA, kW ou kvar.')
 
         return super(PowerTriangle, cls).__new__(cls, x, y)
+    
+    def __str__(self) -> str:
+        return f'<Apparent power = {self.apparent}, Active power = {self.active}, Reactive power = {self.reactive}>'
+
+    def __repr__(self) -> str:
+        return "\n".join((
+            f'Apparent power = {self.apparent}',
+            f'Active power = {self.active}',
+            f'Reactive power = {self.reactive}'
+        ))
 
     def __neg__(self) -> Self:
         val = super(PowerTriangle, self).__neg__()
