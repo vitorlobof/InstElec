@@ -30,6 +30,12 @@ class CondutorSection:
     overcharge_limit_temperature: ureg.Quantity
     sc_limit_temperature: ureg.Quantity
 
+
+    # Meant to set the minimum value for a section, it depends
+    # on the material used and  will be used by the
+    # above_min_section decorator.
+    min_section = 0 * ureg.millimeter**2
+
     def __init__(
         self,
         instalation_method: str,
@@ -57,14 +63,6 @@ class CondutorSection:
             f'Phase number: {self.phase_num}'
         ]
         return '\n'.join(string)
-
-    @property
-    def min_section(self):
-        """
-        Meant to set the minimum value for a section, it will
-        be used by the above_min_section decorator.
-        """
-        return 0 * ureg.millimeter**2
 
     def grouping_correction(self, num_of_circuits: int) -> Self:
         """
@@ -253,9 +251,7 @@ class Aluminium:
     material = 'aluminium'
     electrical_resistivity = 2.82*10**(-8)*(ureg.ohm*ureg.meter)
 
-    @property
-    def min_section(self):
-        return 16 * ureg.millimeter**2
+    min_section = 16 * ureg.millimeter**2
 
 
 class PVC:
