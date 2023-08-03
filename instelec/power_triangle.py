@@ -1,3 +1,9 @@
+"""
+Here the PowerTriangle class is implemented, it is the main way
+for this module to deal with power and will be used on multiple
+other parts of the module.
+"""
+
 from typing import Self
 import numpy as np
 from .settings import ureg
@@ -16,19 +22,24 @@ class PowerTriangle(complex):
         sin = np.sqrt(1 - power_factor**2)
 
         if power.units == ureg.Unit('kVA'):
-            x, y = power.magnitude*cos, power.magnitude*sin
+            real, imag = power.magnitude*cos, power.magnitude*sin
         elif power.units == ureg.Unit('kW'):
-            x, y = power.magnitude, power.magnitude*(sin/cos)
+            real, imag = power.magnitude, power.magnitude*(sin/cos)
         elif power.units == ureg.Unit('kvar'):
-            x, y = power.magnitude*(cos/sin), power.magnitude
+            real, imag = power.magnitude*(cos/sin), power.magnitude
         else:
             raise ValueError(
                 'A potência só pode apresentar as unidades kVA, kW ou kvar.')
 
-        return super(PowerTriangle, cls).__new__(cls, x, y)
-    
+        return super(PowerTriangle, cls).__new__(cls, real, imag)
+
     def __str__(self) -> str:
-        return f'<Apparent power = {self.apparent}, Active power = {self.active}, Reactive power = {self.reactive}>'
+        parts = (
+            f'Apparent power = {self.apparent}',
+            f'Active power = {self.active}',
+            f'Reactive power = {self.reactive}'
+        )
+        return f'<{", ".join(parts)}>'
 
     def __repr__(self) -> str:
         return "\n".join((
@@ -38,44 +49,36 @@ class PowerTriangle(complex):
         ))
 
     def __neg__(self) -> Self:
-        val = super(PowerTriangle, self).__neg__()
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__neg__()
+        return super().__new__(type(self), val.real, val.imag)
 
     def __add__(self, other) -> Self:
-        val = super(PowerTriangle, self).__add__(other)
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__add__(other)
+        return super().__new__(type(self), val.real, val.imag)
 
     def __radd__(self, other) -> Self:
-        val = super(PowerTriangle, self).__radd__(other)
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__radd__(other)
+        return super().__new__(type(self), val.real, val.imag)
 
     def __sub__(self, other) -> Self:
-        val = super(PowerTriangle, self).__sub__(other)
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__sub__(other)
+        return super().__new__(type(self), val.real, val.imag)
 
     def __rsub__(self, other) -> Self:
-        val = super(PowerTriangle, self).__rsub__(other)
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__rsub__(other)
+        return super().__new__(type(self), val.real, val.imag)
 
     def __mul__(self, other) -> Self:
-        val = super(PowerTriangle, self).__mul__(other)
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__mul__(other)
+        return super().__new__(type(self), val.real, val.imag)
 
     def __rmul__(self, other) -> Self:
-        val = super(PowerTriangle, self).__rmul__(other)
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__rmul__(other)
+        return super().__new__(type(self), val.real, val.imag)
 
     def __pow__(self, other) -> Self:
-        val = super(PowerTriangle, self).__pow__(other)
-        return super(PowerTriangle, self).__new__(
-            type(self), val.real, val.imag)
+        val = super().__pow__(other)
+        return super().__new__(type(self), val.real, val.imag)
 
     @property
     def apparent(self) -> float:

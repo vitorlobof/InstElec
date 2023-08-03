@@ -1,3 +1,8 @@
+"""
+Defines the base dir, constants, the unit registry (ureg), and
+the paths to the tables.
+"""
+
 from pathlib import Path
 import os
 from pint import UnitRegistry
@@ -33,8 +38,10 @@ VOLTAGE_DROP_TABLE = os.path.join(
     STATIC_DIR, 'condutor_dimensioning', 'tension_fall.csv')
 
 TEMPERATURE_TABLE = {
-    'ambiente': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ambient.csv'),
+    'ambiente': os.path.join(
+        STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ambient.csv'),
     'solo': os.path.join(STATIC_DIR, 'condutor_dimensioning', 'temperature_correction_ground.csv')
 }
 
-GROUPING_TABLE = os.path.join(STATIC_DIR, 'condutor_dimensioning', 'agrupamento.csv')
+GROUPING_TABLE = os.path.join(
+    STATIC_DIR, 'condutor_dimensioning', 'agrupamento.csv')

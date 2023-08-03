@@ -1,13 +1,29 @@
+"""
+The Engine and the EngineGroup classes are defined, they have
+methods to calculate the current, demand, power and basically
+everything engines can do.
+"""
+
 from typing import Dict, Self
 
 import numpy as np
 
 from .simultaneity_factor import simultaneity_factor
 from ..settings import ureg, VOLTAGE_FF, VOLTAGE_FN
-from ..PowerTriangle import PowerTriangle
+from ..power_triangle import PowerTriangle
 
 
 class Engine:
+    """
+    Receives the power phasor, phase number and efficiency of the engine,
+    the last one being optional.
+
+    It is capable it has multiple forms of receiving data, given by the
+    constructor __init__ and the classmethods.
+
+    Can calculate the demand of the engine and the current going through it.
+    """
+
     def __init__(
         self,
         power_phasor: PowerTriangle,
@@ -90,21 +106,34 @@ class Engine:
         Calcula a corrente que passa pelo motor.
         """
         active = self.power.active
-        pf = self.power.power_factor
+        power_factor = self.power.power_factor
 
         if self.phase_num == 1:
-            current = active/(VOLTAGE_FN*pf)
+            current = active/(VOLTAGE_FN*power_factor)
         elif self.phase_num == 2:
-            current = active/(VOLTAGE_FF*pf)
+            current = active/(VOLTAGE_FF*power_factor)
         elif self.phase_num == 3:
-            current = active/(np.sqrt(3)*VOLTAGE_FF*pf)
+            current = active/(np.sqrt(3)*VOLTAGE_FF*power_factor)
         else:
-            current = active/(self.phase_num*VOLTAGE_FN*pf)
+            current = active/(self.phase_num*VOLTAGE_FN*power_factor)
 
         return current.to_base_units()
 
 
 class EngineGroup:
+    """
+    Receives a dict containing engines as keys and the number of
+    times they appear in the group as it's value.
+
+    The demand method returns the demand of the whole engine group.
+
+    The method current_per_phase calculates the minimum current
+    that should go through each phase, and returns it as a list.
+
+    The charge_current method returns the maximum current going
+    through the phases.
+    """
+
     def __init__(self, engines_count: Dict[Engine, int]) -> None:
         assert isinstance(engines_count, dict),\
             'The engines count has to be a dict.'
@@ -117,8 +146,8 @@ class EngineGroup:
             assert isinstance(count, int) and count >= 1,\
                 'The number of engines has to be a positive integer.'
 
-            sf = simultaneity_factor(count, eng.power.active)
-            self.power += count * eng.power * sf
+            self.power += count * eng.power * \
+                simultaneity_factor(count, eng.power.active)
 
             self.phase_num = max(self.phase_num, eng.phase_num)
 
