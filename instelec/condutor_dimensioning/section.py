@@ -7,8 +7,9 @@ from typing import Self
 import numpy as np
 from ..settings import ureg, VOLTAGE_FF, VOLTAGE_FN
 from .tables import (
-    Amperage, VoltageDrop, NotInTableError, Grouping
+    Amperage, VoltageDrop, Grouping
 )
+from .exceptions import NotInTableError
 from .temperature_correction import TemperatureCorrectionAmbient
 
 
