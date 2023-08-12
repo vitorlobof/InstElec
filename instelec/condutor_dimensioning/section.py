@@ -5,12 +5,25 @@ sections of the conductors of the electrical instalation.
 
 from typing import Self
 import numpy as np
-from ..settings import ureg, VOLTAGE_FF, VOLTAGE_FN
+from ..utils import import_by_full_name
+from ..settings import (
+    ureg, VOLTAGE_FF, VOLTAGE_FN, AMPERAGE_TABLE_CLASS,
+    VOLTAGE_DROP_TABLE_CLASS, GROUPING_TABLE_CLASS,
+    TEMPERATURE_TABLE_AMBIENT_CLASS,
+    TEMPERATURE_TABLE_GROUND_CLASS
+)
 from .tables import (
     Amperage, VoltageDrop, Grouping
 )
 from .exceptions import NotInTableError
 from .temperature_correction import TemperatureCorrectionAmbient
+
+
+Amperage = import_by_full_name(AMPERAGE_TABLE_CLASS)
+VoltageDrop = import_by_full_name(VOLTAGE_DROP_TABLE_CLASS)
+Grouping = import_by_full_name(GROUPING_TABLE_CLASS)
+TemperatureCorrectionAmbient = import_by_full_name(TEMPERATURE_TABLE_AMBIENT_CLASS)
+TemperatureCorrectionGround = import_by_full_name(TEMPERATURE_TABLE_GROUND_CLASS)
 
 
 def above_min_section(func):

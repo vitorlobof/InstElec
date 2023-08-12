@@ -3,10 +3,25 @@ Defines the classes that will search the tables.
 The user is not meant to interact directly with them.
 """
 
+import os
 import pandas as pd
 from ..settings import (
     ureg, AMPERAGE_TABLE, VOLTAGE_DROP_TABLE, GROUPING_TABLE)
 from .exceptions import NotInTableError
+
+
+class Table:
+    filepath: str
+    index_col: str = None
+
+    def __init__(self) -> None:
+        _, ext = os.path.splitext(filepath)
+        if ext == 'csv':
+            self.df = pd.read_csv(self.filepath, index_col=self.index_col)
+        elif ext == 'xslx':
+            self.df = pd.read_excel(self.filepath, index_col=self.index_col)
+        else:
+            raise NotImplementedError("The only tablefiles implemented are csv and xlsx.")
 
 
 class Amperage:
