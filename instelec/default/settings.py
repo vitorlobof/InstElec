@@ -17,8 +17,12 @@ ureg.define('volt_ampere_reactive = watt = var')
 VOLTAGE_FF = 380*ureg.volt
 VOLTAGE_FN = 220*ureg.volt
 
-# Static files, like tables.
+# Tables files, like tables.
 TABLES_DIR = BASE_DIR / 'tables'
+
+# Path to simultaneity table.
+
+SIMULTANEITY_TABLE = TABLES_DIR / 'simultaneity_factor.xlsx'
 
 # Paths to condutor dimensioning tables.
 CONDUTOR_DIM_DIR = TABLES_DIR / 'condutor_dimensioning'

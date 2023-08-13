@@ -6,7 +6,7 @@ used by the EngineGroup class.
 import os
 import pandas as pd
 import numpy as np
-from ..settings import ureg
+from ..settings import ureg, SIMULTANEITY_TABLE
 
 
 class OutOfRangeError(Exception):
@@ -26,7 +26,7 @@ def simultaneity_factor(
     if num_of_engines == 1:
         return 1.0
 
-    table = pd.read_excel(os.path.join('static', 'simultaneity_factor.xlsx'))
+    table = pd.read_excel(SIMULTANEITY_TABLE)
 
     column = get_column(table, num_of_engines)
     row = get_row(table, axis_power)
