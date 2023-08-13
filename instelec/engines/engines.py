@@ -26,7 +26,7 @@ class Engine:
 
     def __init__(
         self,
-        power_phasor: PowerTriangle,
+        power_triangle: PowerTriangle,
         phase_num: int,
         efficiency: float = None
     ) -> None:
@@ -34,7 +34,7 @@ class Engine:
             (isinstance(efficiency, (int, float)) and 0 <= efficiency <= 1),\
             'A eficiência deve ser um número de 0 a 1.'
 
-        self.power = power_phasor
+        self.power = power_triangle
         self.phase_num = phase_num
         self.efficiency = efficiency
 
@@ -60,7 +60,7 @@ class Engine:
         """
         assert isinstance(power_factor, (int, float))\
             and 0 <= power_factor <= 1,\
-            'A potência deve ser um número entre 0 e 1.'
+            'O fator de potência deve ser um número entre 0 e 1.'
 
         phasor = PowerTriangle(
             axis_power.to('kW') / (efficiency * power_factor),
@@ -89,8 +89,8 @@ class Engine:
         axis_power = nominal_power * utilization_factor
         return cls.from_axis_power(
             axis_power,
-            power_factor,
             phase_num,
+            power_factor,
             efficiency=efficiency
         )
 
