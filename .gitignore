@@ -2,6 +2,3 @@ venv/
 __pycache__/
 /*.ipynb
 .vscode/
-test.py
-tests/
-!example1.ipynb
