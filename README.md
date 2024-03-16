@@ -17,11 +17,10 @@ A Calculadora de Instalação Elétrica é uma ferramenta desenvolvida em [Pytho
 
 Contribuições são bem-vindas! Se você tiver ideias para melhorar a calculadora ou encontrar problemas, sinta-se à vontade para abrir uma "issue" ou enviar um "pull request".
 
-## Licença
-
-Este projeto está licenciado sob a licença [MIT](link-para-o-arquivo-de-licenca). Consulte o arquivo LICENSE para obter mais informações.
-
 ## Aviso Legal
 
 Esta calculadora é apenas uma ferramenta auxiliar e não substitui a necessidade de profissionais qualificados para realizar cálculos e garantir a segurança de uma instalação elétrica. Sempre consulte as normas e regulamentos aplicáveis, além de buscar orientação de especialistas, antes de realizar qualquer instalação elétrica.
 
+## Tests
+
+Use the command ```python -m tests``` to run all tests.
